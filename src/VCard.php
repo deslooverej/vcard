@@ -3,6 +3,8 @@
 namespace JeroenDesloovere\VCard;
 
 /*
+ * Modified version by HTMLgraphic
+ *
  * This file is part of the VCard PHP Class from Jeroen Desloovere.
  *
  * For the full copyright and license information, please view the license
@@ -47,7 +49,8 @@ class VCard
         'address',
         'phoneNumber',
         'url',
-        'label'
+        'label',
+        'socialmedia'
     ];
 
     /**
@@ -211,6 +214,25 @@ class VCard
             'role',
             'ROLE' . $this->getCharsetString(),
             $role
+        );
+
+        return $this;
+    }
+
+    /**
+     * Add socialMedia
+     *
+     * @param  string $type The type of social media.
+     * @param  string $addr The address of the social media platform.
+     * @return $this
+     */
+    public function addSocial($type = '', $url)
+    {
+
+        $this->setProperty(
+            'socialmedia',
+            'X-SOCIALPROFILE;type=' . (($type != '') ? $type : '' ),
+            $url
         );
 
         return $this;
@@ -643,7 +665,7 @@ class VCard
     /**
      * multibyte word chunk split
      * @link http://php.net/manual/en/function.chunk-split.php#107711
-     * 
+     *
      * @param  string  $body     The string to be chunked.
      * @param  integer $chunklen The chunk length.
      * @param  string  $end      The line ending sequence.
@@ -935,7 +957,7 @@ class VCard
      * @param  string $value
      * @throws VCardException
      */
-    private function setProperty($element, $key, $value)
+    protected function setProperty($element, $key, $value)
     {
         if (!in_array($element, $this->multiplePropertiesForElementAllowed)
             && isset($this->definedElements[$element])
